@@ -11,6 +11,10 @@
 #include "globals.h"
 
 int main(void) {    
+    /*disable buffering of stdout, stderr*/
+    setvbuf(stdout, NULL, _IONBF, 0);
+    setvbuf(stderr, NULL, _IONBF, 0);
+
     int server_socket, client_socket;
     struct sockaddr_in server_addr, client_addr;
     socklen_t addr_len = sizeof(client_addr);
@@ -28,7 +32,11 @@ int main(void) {
     }
 
     /*set server socket options*/
-    setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR, (void*)ON, sizeof(int));
+    int opt = ON;
+    if (setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
+        fprintf(stderr, "Error in setsockopt() function call: %s\n", strerror(errno));
+        exit(EXIT_FAILURE);
+    }
 
     /*set server address and port*/
     server_addr.sin_family = AF_INET;

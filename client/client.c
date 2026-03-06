@@ -15,6 +15,10 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
+    /*disable buffering of stdout, stderr*/
+    setvbuf(stdout, NULL, _IONBF, 0);
+    setvbuf(stderr, NULL, _IONBF, 0);
+
     int client_socket;
     struct sockaddr_in server_addr;
     char msg_buffer[BUFF_SIZE];
